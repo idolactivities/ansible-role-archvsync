@@ -1,0 +1,49 @@
+---
+- name: Install archvsync dependencies
+  package:
+    name:
+      - git
+      - rsync
+
+- name: Create archvsync user
+  user:
+    name: "{{ archvsync_user }}"
+    home: "{{ archvsync_home }}"
+    create_home: no
+    system: yes
+
+- name: Create archvsync log and mirror directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ archvsync_user }}"
+  with_items:
+    - "{{ archvsync_log_directory }}"
+    - "{{ archvsync_configs | map(attribute='destination') | list }}"
+
+- name: Create archvsync configuration directory
+  file:
+    path: /etc/ftpsync
+    state: directory
+
+- name: Fetch archvsync repository
+  git:
+    repo: "{{ archvsync_repository }}"
+    dest: "{{ archvsync_home }}"
+
+- name: Add archvsync scripts into archvsync user's PATH
+  blockinfile:
+    path: "{{ archvsync_home }}/.profile"
+    create: yes
+    owner: "{{ archvsync_user }}"
+    block: |
+      if [[ ":$PATH:" != *":/path/to/add:"* ]]; then
+        PATH="$HOME/bin:$PATH"
+      fi
+    marker: "# {mark} HOME/BIN PATH"
+
+- name: Create ftpsync configurations
+  template:
+    src: ftpsync.conf.j2
+    dest: "/etc/ftpsync/ftpsync-{{ item.key }}.conf"
+  with_dict: "{{ archvsync_configs }}"

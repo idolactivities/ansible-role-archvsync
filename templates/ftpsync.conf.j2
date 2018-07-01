@@ -1,0 +1,15 @@
+# {{ ansible_managed }}
+MIRRORNAME="{{ item.value.mirrorname | default(archvsync_mirrorname) }}"
+TO="{{ item.value.destination }}"
+MAILTO="{{ item.value.mailto | default(archvsync_mailto) }}"
+LOGDIR="{{ item.value.logdir | default(archvsync_log_directory) }}"
+
+RSYNC_HOST={{ item.value.rsync_host }}
+
+{% if 'arch_exclude' not in item.value %}
+ARCH_INCLUDE="{{ item.value.arch_include | default(archvsync_arch_include) | join(' ') }}"
+{% endif %}
+
+{% for key, value in item.value.items() if key not in ['mirrorname', 'destination', 'mailto', 'logdir', 'rsync_host', 'arch_include'] %}
+{{ key | upper }}={{ value | to_nice_json }}
+{% endfor %}

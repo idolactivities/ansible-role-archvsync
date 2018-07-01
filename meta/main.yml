@@ -1,0 +1,17 @@
+galaxy_info:
+  role_name: archvsync
+  author: lae
+  description: Installs and configures archvsync for mirroring Debian and Ubuntu repositories
+  company: Idol Activities
+  license: MIT
+  min_ansible_version: 2.5
+  platforms:
+    - name: Debian
+      versions:
+        - stretch
+    - name: Ubuntu
+      versions:
+        - bionic
+  galaxy_tags:
+    - packaging
+dependencies: []

@@ -1,0 +1,28 @@
+---
+- hosts: all
+  tasks:
+    - name: Test existence of directories
+      stat:
+        path: "{{ item }}"
+      register: __result
+      failed_when: "__result.stat.isdir is not defined or not __result.stat.isdir"
+      with_items:
+        - /var/log/ftpsync
+        - /etc/ftpsync
+    - name: Test existence of files
+      stat:
+        path: "{{ item }}"
+      register: __result
+      failed_when: "__result.stat.isreg is not defined or not __result.stat.isreg"
+      with_items:
+        - /home/archvsync/.profile
+        - /etc/ftpsync/ftpsync-debian.conf
+        - /etc/ftpsync/ftpsync-debian-security.conf
+        - /etc/ftpsync/ftpsync-ubuntu.conf
+    - name: Print configuration files
+      shell: "cat {{ item }}"
+      with_items:
+        - /home/archvsync/.profile
+        - /etc/ftpsync/ftpsync-debian.conf
+        - /etc/ftpsync/ftpsync-debian-security.conf
+        - /etc/ftpsync/ftpsync-ubuntu.conf
