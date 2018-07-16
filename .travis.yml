@@ -17,7 +17,7 @@ install:
 - if [ "$ANSIBLE_GIT_VERSION" ]; then pip install "https://github.com/ansible/ansible/archive/${ANSIBLE_GIT_VERSION}.tar.gz";
   else pip install "ansible${ANSIBLE_VERSION}"; fi
 - ansible --version
-- ansible-galaxy install lae.travis_lxc
+- ansible-galaxy install lae.travis-lxc
 - ansible-playbook tests/install.yml -i tests/inventory
 - git archive --format tar.gz HEAD > idolactivities.archvsync.tar.gz && ansible-galaxy install
   idolactivities.archvsync.tar.gz,$(git rev-parse HEAD),idolactivities.archvsync && rm idolactivities.archvsync.tar.gz
