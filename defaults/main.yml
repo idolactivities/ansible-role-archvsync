@@ -17,6 +17,6 @@ archvsync_configs:
     rsync_path: debian/
     destination: "{{ archvsync_mirror_directory }}/debian"
     cron:
-      day: *
-      hour: */2
-      minute: 0
+      day: "*"
+      hour: "*/2"
+      minute: "0"
