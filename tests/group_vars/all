@@ -3,3 +3,26 @@ ansible_ssh_user: root
 nginx_sites:
   - name: test-site
     definition: "{{ lookup('template', 'test-site.conf.j2') }}"
+archvsync_configs:
+  debian:
+    rsync_host: mirrors.kernel.org
+    rsync_path: debian/
+    destination: "{{ archvsync_mirror_directory }}/debian"
+    cron:
+      day: *
+      hour: */2
+      minute: 0
+  debian-security:
+    rsync_host: security.debian.org
+    rsync_path: debian-security/
+    destination: "{{ archvsync_mirror_directory }}/debian-security"
+    cron:
+      special_time: daily
+  ubuntu:
+    rsync_host: mirrors.kernel.org
+    rsync_path: ubuntu/
+    destination: "{{ archvsync_mirror_directory }}/ubuntu"
+    cron:
+      day: *
+      hour: */3
+      minute: 0

@@ -12,15 +12,6 @@
     create_home: no
     system: yes
 
-- name: Create archvsync log and mirror directories
-  file:
-    path: "{{ item }}"
-    state: directory
-    owner: "{{ archvsync_user }}"
-  with_items:
-    - "{{ archvsync_log_directory }}"
-    - "{{ archvsync_configs | map(attribute='destination') | list }}"
-
 - name: Create archvsync configuration directory
   file:
     path: /etc/ftpsync
@@ -47,3 +38,26 @@
     src: ftpsync.conf.j2
     dest: "/etc/ftpsync/ftpsync-{{ item.key }}.conf"
   with_dict: "{{ archvsync_configs }}"
+
+- name: Create archvsync log and mirror directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ archvsync_user }}"
+  with_items:
+    - "{{ archvsync_log_directory }}"
+    - "{{ archvsync_configs | map(attribute='destination') | list }}"
+
+- name: Create ftpsync cronjobs
+  cron:
+    name: "Run ftpsync job for {{ item.key }}"
+    job: ". ~/.profile; ftpsync sync:archive:{{ item.key }} 2>&1"
+    user: "{{ archvsync_user }}"
+    special_time: "{{ _cron_config.special_time | default(omit) }}"
+    day: "{{ _cron_config.day | default(omit) }}"
+    hour: "{{ _cron_config.hour | default(omit) }}"
+    minute: "{{ _cron_config.minute | default(omit) }}"
+  with_dict: "{{ archvsync_configs }}"
+  when: "'cron' in item.value"
+  vars:
+    _cron_config: "{{ item.value.cron }}"
