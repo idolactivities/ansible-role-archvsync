@@ -26,3 +26,5 @@
         - /etc/ftpsync/ftpsync-debian.conf
         - /etc/ftpsync/ftpsync-debian-security.conf
         - /etc/ftpsync/ftpsync-ubuntu.conf
+    - name: print crontab
+      shell: "crontab -l archvsync"

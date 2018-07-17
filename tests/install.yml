@@ -6,4 +6,10 @@
   vars:
     test_profiles:
       - profile: debian-stretch
-      - profile: ubuntu-bionic
+
+- hosts: all
+  tasks:
+    - name: install cron
+      package:
+        name: cron
+        state: installed
