@@ -10,6 +10,6 @@ RSYNC_HOST={{ item.value.rsync_host }}
 ARCH_INCLUDE="{{ item.value.arch_include | default(archvsync_arch_include) | join(' ') }}"
 {% endif %}
 
-{% for key, value in item.value.items() if key not in ['mirrorname', 'destination', 'mailto', 'logdir', 'rsync_host', 'arch_include'] %}
+{% for key, value in item.value.items() if key not in ['mirrorname', 'destination', 'mailto', 'logdir', 'rsync_host', 'arch_include', 'cron'] %}
 {{ key | upper }}={{ value | to_nice_json }}
 {% endfor %}
